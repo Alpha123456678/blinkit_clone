@@ -1,9 +1,19 @@
-import 'package:blinkit_app/repository/screens/bottomnav/bottomnavscreen.dart';
+import 'package:blinkit_app/data/services/auth_service.dart';
+import 'package:blinkit_app/repository/screens/auth/otpscreen.dart';
 import 'package:blinkit_app/repository/widgets/uihelper.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController phoneController = TextEditingController();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +21,6 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               UiHelper.CustomImage(
                 img: "Blinkit Onboarding Screen.png",
@@ -20,12 +29,9 @@ class LoginScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
 
-              UiHelper.CustomImage(
-                img: "image 10.png",
-                height: 70,
-              ),
+              UiHelper.CustomImage(img: "image 10.png", height: 70),
 
               const SizedBox(height: 10),
 
@@ -37,7 +43,7 @@ class LoginScreen extends StatelessWidget {
                 fontfamily: "bold",
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -50,88 +56,78 @@ class LoginScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        UiHelper.CustomText(
-                          text: "Sujal",
-                          color: Colors.black,
-                          fontweight: FontWeight.w600,
-                          fontsize: 16,
-                        ),
-
-                        const SizedBox(height: 5),
-
-                        UiHelper.CustomText(
-                          text: "78277XXXX",
-                          color: Colors.grey,
-                          fontweight: FontWeight.bold,
-                          fontsize: 14,
-                          fontfamily: "bold",
+                        TextField(
+                          controller: phoneController,
+                          keyboardType: TextInputType.phone,
+                          maxLength: 10,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Enter Phone Number",
+                            prefixText: "+91 ",
+                          ),
                         ),
 
                         const SizedBox(height: 20),
 
                         SizedBox(
-                          height: 50,
                           width: double.infinity,
+                          height: 50,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BottomNavScreen(),
-                                ),
-                              );
-                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0XFFE23744),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                UiHelper.CustomText(
-                                  text: "Login with",
-                                  color: Colors.white,
-                                  fontweight: FontWeight.bold,
-                                  fontsize: 14,
-                                  fontfamily: "bold",
-                                ),
-                                const SizedBox(width: 8),
-                                UiHelper.CustomImage(
-                                  img: "image 9.png",
-                                  height: 20,
-                                ),
-                              ],
-                            ),
+                            onPressed: () async {
+                              if (phoneController.text.length != 10) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Enter a valid phone number"),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              await AuthService().verifyPhone(
+                                phoneNumber: phoneController.text.trim(),
+                                codeSent: (verificationId) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => OtpScreen(
+                                        verificationId: verificationId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                failed: (error) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(error)),
+                                  );
+                                },
+                              );
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                            },
+                            child: isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : const Text(
+                                    "Send OTP",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                           ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        UiHelper.CustomText(
-                          text:
-                              "Access your saved addresses from Zomato automatically!",
-                          color: Colors.grey,
-                          fontweight: FontWeight.normal,
-                          fontsize: 10,
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        UiHelper.CustomText(
-                          text: "or login with phone number",
-                          color: const Color(0XFF269237),
-                          fontweight: FontWeight.w500,
-                          fontsize: 14,
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 20),
             ],
           ),
         ),
