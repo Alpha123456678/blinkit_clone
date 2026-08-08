@@ -46,78 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-
-    cartService.addListener(_cartUpdated);
-  }
-
-  void _cartUpdated() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  @override
-  void dispose() {
-    cartService.removeListener(_cartUpdated);
-    searchController.dispose();
-    super.dispose();
-  }
-
-  Widget productButton(int index) {
-    final quantity = cartService.items[index].quantity;
-
-    if (quantity == 0) {
-      return UiHelper.CustomButton(() {
-        cartService.addItem(index);
-      });
-    }
-
-    return Container(
-      height: 24,
-      width: 65,
-      decoration: BoxDecoration(
-        color: const Color(0XFF27AF34),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          InkWell(
-            onTap: () {
-              cartService.removeItem(index);
-            },
-            child: const Icon(
-              Icons.remove,
-              size: 15,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            quantity.toString(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              cartService.addItem(index);
-            },
-            child: const Icon(
-              Icons.add,
-              size: 15,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -221,14 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        UiHelper.CustomImage(
-                          img: "image 60.png",
-                        ),
-
-                        UiHelper.CustomImage(
-                          img: "image 55.png",
-                        ),
-
+                        UiHelper.CustomImage(img: "image 60.png"),
+                        UiHelper.CustomImage(img: "image 55.png"),
                         const SizedBox(width: 5),
 
                         UiHelper.CustomText(
@@ -240,14 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
 
                         const SizedBox(width: 5),
-
-                        UiHelper.CustomImage(
-                          img: "image 55.png",
-                        ),
-
-                        UiHelper.CustomImage(
-                          img: "image 61.png",
-                        ),
+                        UiHelper.CustomImage(img: "image 55.png"),
+                        UiHelper.CustomImage(img: "image 61.png"),
                       ],
                     ),
 
@@ -361,10 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             Row(
                               children: [
-                                UiHelper.CustomImage(
-                                  img: "timer 4.png",
-                                ),
-
+                                UiHelper.CustomImage(img: "timer 4.png"),
                                 const SizedBox(width: 4),
 
                                 UiHelper.CustomText(
@@ -380,10 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             Row(
                               children: [
-                                UiHelper.CustomImage(
-                                  img: "image 50 (1).png",
-                                ),
-
+                                UiHelper.CustomImage(img: "image 50 (1).png"),
                                 const SizedBox(width: 4),
 
                                 UiHelper.CustomText(
@@ -394,8 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
 
                                 const Spacer(),
-
-                                productButton(index),
+                                UiHelper.CustomButton(() {}),
                               ],
                             ),
                           ],
