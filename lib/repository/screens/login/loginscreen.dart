@@ -16,6 +16,62 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
   @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  Future<void> sendOtp() async {
+    final phone = phoneController.text.trim();
+
+    if (phone.length != 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter a valid 10-digit phone number"),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    await AuthService().verifyPhone(
+      phoneNumber: phone,
+      codeSent: (verificationId) {
+        if (!mounted) return;
+
+        setState(() {
+          isLoading = false;
+        });
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OtpScreen(
+              verificationId: verificationId,
+            ),
+          ),
+        );
+      },
+      failed: (error) {
+        if (!mounted) return;
+
+        setState(() {
+          isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -31,7 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 20),
 
-              UiHelper.CustomImage(img: "image 10.png", height: 70),
+              UiHelper.CustomImage(
+                img: "image 10.png",
+                height: 70,
+              ),
 
               const SizedBox(height: 10),
 
@@ -73,53 +132,29 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
+                            onPressed: isLoading ? null : sendOtp,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0XFFE23744),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                            onPressed: () async {
-                              if (phoneController.text.length != 10) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Enter a valid phone number"),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              setState(() {
-                                isLoading = true;
-                              });
-
-                              await AuthService().verifyPhone(
-                                phoneNumber: phoneController.text.trim(),
-                                codeSent: (verificationId) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => OtpScreen(
-                                        verificationId: verificationId,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                failed: (error) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(error)),
-                                  );
-                                },
-                              );
-
-                              setState(() {
-                                isLoading = false;
-                              });
-                            },
                             child: isLoading
-                                ? const CircularProgressIndicator(
-                                    color: Colors.white,
+                                ? const SizedBox(
+                                    height: 22,
+                                    width: 22,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
                                   )
                                 : const Text(
                                     "Send OTP",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                           ),
                         ),
@@ -128,6 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),

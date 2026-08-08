@@ -1,3 +1,5 @@
+
+import 'package:blinkit_app/data/services/cart_services.dart';
 import 'package:blinkit_app/repository/widgets/uihelper.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
 
+  final CartService cartService = CartService.instance;
+
   final List<Map<String, String>> data = [
     {"img": "image 50.png", "text": "Lights, Diyas\n& Candles"},
     {"img": "image 51.png", "text": "Diwali\nGifts"},
@@ -19,9 +23,18 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final List<Map<String, String>> category = [
-    {"img": "image 54.png", "text": "Golden Glass\nWooden Lid Candle (Oudh)"},
-    {"img": "image 57.png", "text": "Royal Gulab Jamun\nBy Bikano"},
-    {"img": "image 63.png", "text": "Golden Glass\nWooden Lid Candle (Oudh)"},
+    {
+      "img": "image 54.png",
+      "text": "Golden Glass\nWooden Lid Candle (Oudh)"
+    },
+    {
+      "img": "image 57.png",
+      "text": "Royal Gulab Jamun\nBy Bikano"
+    },
+    {
+      "img": "image 63.png",
+      "text": "Golden Glass\nWooden Lid Candle (Oudh)"
+    },
   ];
 
   final List<Map<String, String>> groceryKitchen = [
@@ -32,28 +45,32 @@ class _HomeScreenState extends State<HomeScreen> {
     {"img": "image 45 (1).png", "text": "Biscuits &\nBakery"},
   ];
 
-  // Quantity of each bestseller product.
-  // Initially every product has quantity 0.
-  final List<int> quantities = [0, 0, 0];
+  @override
+  void initState() {
+    super.initState();
 
-  void addProduct(int index) {
-    setState(() {
-      quantities[index]++;
-    });
+    cartService.addListener(_cartUpdated);
   }
 
-  void removeProduct(int index) {
-    setState(() {
-      if (quantities[index] > 0) {
-        quantities[index]--;
-      }
-    });
+  void _cartUpdated() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    cartService.removeListener(_cartUpdated);
+    searchController.dispose();
+    super.dispose();
   }
 
   Widget productButton(int index) {
-    if (quantities[index] == 0) {
+    final quantity = cartService.items[index].quantity;
+
+    if (quantity == 0) {
       return UiHelper.CustomButton(() {
-        addProduct(index);
+        cartService.addItem(index);
       });
     }
 
@@ -69,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           InkWell(
             onTap: () {
-              removeProduct(index);
+              cartService.removeItem(index);
             },
             child: const Icon(
               Icons.remove,
@@ -78,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Text(
-            quantities[index].toString(),
+            quantity.toString(),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 11,
@@ -87,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           InkWell(
             onTap: () {
-              addProduct(index);
+              cartService.addItem(index);
             },
             child: const Icon(
               Icons.add,
@@ -101,18 +118,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // HEADER
               Stack(
                 children: [
                   Container(
@@ -134,7 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontsize: 15,
                             fontfamily: "bold",
                           ),
+
                           const SizedBox(height: 4),
+
                           UiHelper.CustomText(
                             text: "16 minutes",
                             color: Colors.white,
@@ -142,7 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontsize: 20,
                             fontfamily: "bold",
                           ),
+
                           const SizedBox(height: 4),
+
                           Row(
                             children: [
                               UiHelper.CustomText(
@@ -151,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontweight: FontWeight.bold,
                                 fontsize: 14,
                               ),
+
                               Expanded(
                                 child: UiHelper.CustomText(
                                   text:
@@ -192,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
 
+              // DIWALI SALE
               Container(
                 height: 165,
                 width: double.infinity,
@@ -206,10 +224,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         UiHelper.CustomImage(
                           img: "image 60.png",
                         ),
+
                         UiHelper.CustomImage(
                           img: "image 55.png",
                         ),
+
                         const SizedBox(width: 5),
+
                         UiHelper.CustomText(
                           text: "Mega Diwali Sale",
                           color: Colors.white,
@@ -217,10 +238,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontsize: 20,
                           fontfamily: "bold",
                         ),
+
                         const SizedBox(width: 5),
+
                         UiHelper.CustomImage(
                           img: "image 55.png",
                         ),
+
                         UiHelper.CustomImage(
                           img: "image 61.png",
                         ),
@@ -248,12 +272,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 children: [
                                   const SizedBox(height: 8),
+
                                   UiHelper.CustomText(
                                     text: data[index]["text"]!,
                                     color: Colors.black,
                                     fontweight: FontWeight.bold,
                                     fontsize: 10,
                                   ),
+
                                   SizedBox(
                                     height: 55,
                                     child: UiHelper.CustomImage(
@@ -274,6 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 15),
 
+              // BESTSELLERS
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
@@ -337,7 +364,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 UiHelper.CustomImage(
                                   img: "timer 4.png",
                                 ),
+
                                 const SizedBox(width: 4),
+
                                 UiHelper.CustomText(
                                   text: "16 MINS",
                                   color: const Color(0XFF9C9C9C),
@@ -354,16 +383,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 UiHelper.CustomImage(
                                   img: "image 50 (1).png",
                                 ),
+
                                 const SizedBox(width: 4),
+
                                 UiHelper.CustomText(
                                   text: "₹79",
                                   color: Colors.black,
                                   fontweight: FontWeight.bold,
                                   fontsize: 15,
                                 ),
+
                                 const Spacer(),
 
-                                // Functional Add / Quantity button
                                 productButton(index),
                               ],
                             ),
@@ -377,6 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 15),
 
+              // GROCERY & KITCHEN
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
@@ -432,6 +464,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
