@@ -1,9 +1,14 @@
 import 'package:blinkit_app/repository/widgets/uihelper.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
 
   final List<Map<String, String>> data = [
@@ -27,6 +32,80 @@ class HomeScreen extends StatelessWidget {
     {"img": "image 45 (1).png", "text": "Biscuits &\nBakery"},
   ];
 
+  // Quantity of each bestseller product.
+  // Initially every product has quantity 0.
+  final List<int> quantities = [0, 0, 0];
+
+  void addProduct(int index) {
+    setState(() {
+      quantities[index]++;
+    });
+  }
+
+  void removeProduct(int index) {
+    setState(() {
+      if (quantities[index] > 0) {
+        quantities[index]--;
+      }
+    });
+  }
+
+  Widget productButton(int index) {
+    if (quantities[index] == 0) {
+      return UiHelper.CustomButton(() {
+        addProduct(index);
+      });
+    }
+
+    return Container(
+      height: 24,
+      width: 65,
+      decoration: BoxDecoration(
+        color: const Color(0XFF27AF34),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          InkWell(
+            onTap: () {
+              removeProduct(index);
+            },
+            child: const Icon(
+              Icons.remove,
+              size: 15,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            quantities[index].toString(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              addProduct(index);
+            },
+            child: const Icon(
+              Icons.add,
+              size: 15,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +120,10 @@ class HomeScreen extends StatelessWidget {
                     width: double.infinity,
                     color: const Color(0XFFEC0505),
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 30),
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        top: 30,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -71,7 +153,8 @@ class HomeScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 child: UiHelper.CustomText(
-                                  text: "- Sujal Dave, Ratanada, Jodhpur (Raj)",
+                                  text:
+                                      "- Sujal Dave, Ratanada, Jodhpur (Raj)",
                                   color: Colors.white,
                                   fontweight: FontWeight.normal,
                                   fontsize: 14,
@@ -83,15 +166,21 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   const Positioned(
                     top: 25,
                     right: 20,
                     child: CircleAvatar(
                       radius: 16,
                       backgroundColor: Colors.black,
-                      child: Icon(Icons.person, color: Colors.white, size: 18),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
+
                   Positioned(
                     left: 20,
                     right: 20,
@@ -110,11 +199,16 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 5),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        UiHelper.CustomImage(img: "image 60.png"),
-                        UiHelper.CustomImage(img: "image 55.png"),
+                        UiHelper.CustomImage(
+                          img: "image 60.png",
+                        ),
+                        UiHelper.CustomImage(
+                          img: "image 55.png",
+                        ),
                         const SizedBox(width: 5),
                         UiHelper.CustomText(
                           text: "Mega Diwali Sale",
@@ -124,11 +218,17 @@ class HomeScreen extends StatelessWidget {
                           fontfamily: "bold",
                         ),
                         const SizedBox(width: 5),
-                        UiHelper.CustomImage(img: "image 55.png"),
-                        UiHelper.CustomImage(img: "image 61.png"),
+                        UiHelper.CustomImage(
+                          img: "image 55.png",
+                        ),
+                        UiHelper.CustomImage(
+                          img: "image 61.png",
+                        ),
                       ],
                     ),
+
                     const SizedBox(height: 10),
+
                     SizedBox(
                       height: 105,
                       child: ListView.builder(
@@ -136,7 +236,9 @@ class HomeScreen extends StatelessWidget {
                         itemCount: data.length,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
                             child: Container(
                               width: 90,
                               decoration: BoxDecoration(
@@ -169,6 +271,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
               const SizedBox(height: 15),
 
               Padding(
@@ -195,8 +298,10 @@ class HomeScreen extends StatelessWidget {
                   itemCount: category.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                      ),
+                      child: SizedBox(
                         width: 120,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +334,9 @@ class HomeScreen extends StatelessWidget {
 
                             Row(
                               children: [
-                                UiHelper.CustomImage(img: "timer 4.png"),
+                                UiHelper.CustomImage(
+                                  img: "timer 4.png",
+                                ),
                                 const SizedBox(width: 4),
                                 UiHelper.CustomText(
                                   text: "16 MINS",
@@ -244,7 +351,9 @@ class HomeScreen extends StatelessWidget {
 
                             Row(
                               children: [
-                                UiHelper.CustomImage(img: "image 50 (1).png"),
+                                UiHelper.CustomImage(
+                                  img: "image 50 (1).png",
+                                ),
                                 const SizedBox(width: 4),
                                 UiHelper.CustomText(
                                   text: "₹79",
@@ -253,7 +362,9 @@ class HomeScreen extends StatelessWidget {
                                   fontsize: 15,
                                 ),
                                 const Spacer(),
-                                UiHelper.CustomButton(() {}),
+
+                                // Functional Add / Quantity button
+                                productButton(index),
                               ],
                             ),
                           ],
@@ -290,7 +401,9 @@ class HomeScreen extends StatelessWidget {
                   itemCount: groceryKitchen.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                      ),
                       child: Column(
                         children: [
                           Container(
