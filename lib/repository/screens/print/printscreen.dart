@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 class PrintScreen extends StatelessWidget {
   TextEditingController searchController = TextEditingController();
+
+  PrintScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,9 +209,9 @@ class PrintScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                child: UiHelper.CustomImage(img: "document.png"),
                 right: 20,
                 bottom: 40,
+                child: UiHelper.CustomImage(img: "document.png"),
               )
             ])
           ],
