@@ -88,7 +88,7 @@ class CategoryScreen extends StatelessWidget {
                             Expanded(
                               child: UiHelper.CustomText(
                                 text:
-                                    "- Sujal Dave, Ratanada, Jodhpur (Raj)",
+                                    "- Nandini, mathura road, aligarh, uttar pradesh, 202001",
                                 color: Colors.black,
                                 fontweight: FontWeight.bold,
                                 fontsize: 14,

@@ -60,7 +60,7 @@ class PrintScreen extends StatelessWidget {
                               fontweight: FontWeight.bold,
                               fontsize: 14),
                           UiHelper.CustomText(
-                              text: "- Sujal Dave, Ratanada, Jodhpur (Raj)",
+                              text: "- Nandini, mathura road, aligarh, uttar pradesh, 202001",
                               color: Color(0XFF000000),
                               fontweight: FontWeight.bold,
                               fontsize: 14)

@@ -1,17 +1,22 @@
 import 'package:flutter/foundation.dart';
 
 class CartItem {
+  final String id;
   final String name;
   final String image;
-  final int price;
+  final double price;
+
   int quantity;
 
   CartItem({
+    required this.id,
     required this.name,
     required this.image,
     required this.price,
     this.quantity = 0,
   });
+
+  double get totalPrice => price * quantity;
 }
 
 class CartService extends ChangeNotifier {
@@ -19,55 +24,71 @@ class CartService extends ChangeNotifier {
 
   CartService._internal();
 
-  final List<CartItem> _items = [
-    CartItem(
-      name: "Golden Glass Wooden Lid Candle (Oudh)",
-      image: "image 54.png",
-      price: 79,
-    ),
-    CartItem(
-      name: "Royal Gulab Jamun By Bikano",
-      image: "image 57.png",
-      price: 79,
-    ),
-    CartItem(
-      name: "Golden Glass Wooden Lid Candle (Oudh)",
-      image: "image 63.png",
-      price: 79,
-    ),
-  ];
+  final Map<String, CartItem> _items = {};
 
-  List<CartItem> get items => _items;
-
-  void addItem(int index) {
-    _items[index].quantity++;
-    notifyListeners();
-  }
-
-  void removeItem(int index) {
-    if (_items[index].quantity > 0) {
-      _items[index].quantity--;
-      notifyListeners();
-    }
-  }
+  List<CartItem> get items => _items.values.toList();
 
   int get totalItems {
     int total = 0;
 
-    for (final item in _items) {
+    for (final item in _items.values) {
       total += item.quantity;
     }
 
     return total;
   }
 
-  int get totalPrice {
-    int total = 0;
+  double get totalPrice {
+    double total = 0;
 
-    for (final item in _items) {
-      total += item.price * item.quantity;
+    for (final item in _items.values) {
+      total += item.totalPrice;
     }
 
     return total;
+  }
+
+  int getQuantity(String id) {
+    return _items[id]?.quantity ?? 0;
+  }
+
+  void addItem({
+    required String id,
+    required String name,
+    required String image,
+    required double price,
+  }) {
+    if (_items.containsKey(id)) {
+      _items[id]!.quantity++;
+    } else {
+      _items[id] = CartItem(
+        id: id,
+        name: name,
+        image: image,
+        price: price,
+        quantity: 1,
+      );
+    }
+
+    notifyListeners();
+  }
+
+  void removeItem(String id) {
+    if (!_items.containsKey(id)) {
+      return;
+    }
+
+    if (_items[id]!.quantity > 1) {
+      _items[id]!.quantity--;
+    } else {
+      _items.remove(id);
+    }
+
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
   }
 }
