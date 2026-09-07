@@ -1,4 +1,3 @@
-
 import 'package:blinkit_app/data/services/order_services.dart';
 import 'package:flutter/material.dart';
 
@@ -10,10 +9,33 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
+
     OrderService.instance.addListener(orderUpdated);
+
+    loadOrders();
+  }
+
+  Future<void> loadOrders() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await OrderService.instance.loadOrders();
+    } catch (e) {
+      debugPrint("Error loading orders: $e");
+    }
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void orderUpdated() {
@@ -47,177 +69,190 @@ class _OrderScreenState extends State<OrderScreen> {
           color: Colors.black,
         ),
       ),
-      body: orders.isEmpty
+
+      body: isLoading
           ? const Center(
-              child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 80,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    "No orders yet",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Your placed orders will appear here.",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
+              child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              padding: const EdgeInsets.all(15),
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                final order = orders[index];
-
-                return Container(
-                  margin:
-                      const EdgeInsets.only(bottom: 15),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.grey.shade300,
-                    ),
-                  ),
+          : orders.isEmpty
+              ? const Center(
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          const Text(
-                            "Order",
-                            style: TextStyle(
-                              fontWeight:
-                                  FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            "₹${order.totalAmount.toStringAsFixed(0)}",
-                            style: const TextStyle(
-                              fontWeight:
-                                  FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+                      Icon(
+                        Icons.shopping_bag_outlined,
+                        size: 80,
+                        color: Colors.grey,
                       ),
-
-                      const SizedBox(height: 5),
-
+                      SizedBox(height: 15),
                       Text(
-                        order.orderId,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
+                        "No orders yet",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Your placed orders will appear here.",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: loadOrders,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(15),
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) {
+                      final order = orders[index];
 
-                      const Divider(height: 20),
-
-                      ...order.items.map(
-                        (item) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            child: Row(
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 15),
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Container(
-                                  height: 55,
-                                  width: 55,
-                                  decoration:
-                                      BoxDecoration(
-                                    color:
-                                        const Color(
-                                      0XFFF5F5F5,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                      8,
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/${item.image}",
-                                    fit: BoxFit.contain,
+                                const Text(
+                                  "Order",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
-
-                                const SizedBox(width: 10),
-
-                                Expanded(
-                                  child: Text(
-                                    item.name,
-                                    maxLines: 2,
-                                    overflow:
-                                        TextOverflow
-                                            .ellipsis,
-                                    style:
-                                        const TextStyle(
-                                      fontWeight:
-                                          FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-
+                                const Spacer(),
                                 Text(
-                                  "x${item.quantity}",
-                                  style:
-                                      const TextStyle(
-                                    color: Colors.grey,
+                                  "₹${order.totalAmount.toStringAsFixed(0)}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
 
-                      const SizedBox(height: 5),
+                            const SizedBox(height: 5),
 
-                      const Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 18,
-                          ),
-                          SizedBox(width: 6),
-                          Text(
-                            "Order placed successfully",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight:
-                                  FontWeight.bold,
-                              fontSize: 12,
+                            Text(
+                              order.orderId,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+
+                            const SizedBox(height: 4),
+
+                            Text(
+                              "Date: ${order.date.day}/${order.date.month}/${order.date.year}",
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+
+                            const Divider(height: 20),
+
+                            ...order.items.map(
+                              (item) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.only(
+                                    bottom: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 55,
+                                        width: 55,
+                                        decoration: BoxDecoration(
+                                          color: const Color(
+                                            0XFFF5F5F5,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Image.asset(
+                                          "assets/images/${item.image}",
+                                          fit: BoxFit.contain,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              Icons.image_not_supported,
+                                              color: Colors.grey,
+                                            );
+                                          },
+                                        ),
+                                      ),
+
+                                      const SizedBox(width: 10),
+
+                                      Expanded(
+                                        child: Text(
+                                          item.name,
+                                          maxLines: 2,
+                                          overflow:
+                                              TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight:
+                                                FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+
+                                      Text(
+                                        "x${item.quantity}",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+
+                            const SizedBox(height: 5),
+
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Order placed successfully",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
+                ),
     );
   }
 }

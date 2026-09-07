@@ -1,11 +1,37 @@
 import 'package:blinkit_app/repository/screens/orders/orderscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  Future<void> logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      if (!context.mounted) return;
+
+      // Change this route if your LoginScreen uses a different route.
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/login',
+        (route) => false,
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Logout failed: $e"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0XFFF7CB45),
@@ -18,6 +44,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -38,11 +65,12 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 15),
 
-              const Text(
-                "My Profile",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+              // USER EMAIL
+              Text(
+                user?.email ?? "No email",
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
                 ),
               ),
 
@@ -53,12 +81,54 @@ class ProfileScreen extends StatelessWidget {
                 icon: Icons.person_outline,
                 title: "Personal Information",
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Personal Information will be added soon.",
-                      ),
-                    ),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Personal Information"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Email",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              user?.email ?? "No email",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            const Text(
+                              "User ID",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              user?.uid ?? "Not available",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Close"),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
               ),
@@ -132,17 +202,10 @@ class ProfileScreen extends StatelessWidget {
                               backgroundColor:
                                   const Color(0XFFE23744),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               Navigator.pop(dialogContext);
 
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Logout functionality will be connected with Firebase.",
-                                  ),
-                                ),
-                              );
+                              await logout(context);
                             },
                             child: const Text(
                               "Logout",
