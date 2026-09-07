@@ -23,9 +23,9 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
-  // =========================================================
+
   // SEARCH
-  // =========================================================
+
 
   void searchProducts(String value) {
     setState(() {
@@ -33,9 +33,8 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  // =========================================================
   // PRODUCT BUTTON
-  // =========================================================
+ 
 
   Widget productButton(Map<String, dynamic> product) {
     final String id = product["id"].toString();
@@ -53,9 +52,9 @@ class _SearchScreenState extends State<SearchScreen> {
         final quantity =
             CartService.instance.getQuantity(id);
 
-        // =====================================================
+      
         // ADD BUTTON
-        // =====================================================
+
 
         if (quantity == 0) {
           return SizedBox(
@@ -96,9 +95,8 @@ class _SearchScreenState extends State<SearchScreen> {
           );
         }
 
-        // =====================================================
         // QUANTITY BUTTON
-        // =====================================================
+     
 
         return Container(
           height: 35,
@@ -152,9 +150,9 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // =========================================================
+ 
   // PRODUCT IMAGE
-  // =========================================================
+ 
 
   Widget productImage(String image) {
     // If Firestore contains a network URL
@@ -189,9 +187,9 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // =========================================================
+ 
   // BUILD
-  // =========================================================
+  
 
   @override
   Widget build(BuildContext context) {
@@ -209,9 +207,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
       body: Column(
         children: [
-          // ===================================================
+         
           // SEARCH FIELD
-          // ===================================================
+          
 
           Padding(
             padding: const EdgeInsets.all(15),
@@ -253,18 +251,18 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
 
-          // ===================================================
+          
           // FIRESTORE PRODUCTS
-          // ===================================================
+          
 
           Expanded(
             child: StreamBuilder(
               stream: productService.getProducts(),
 
               builder: (context, snapshot) {
-                // =================================================
+             
                 // LOADING
-                // =================================================
+                
 
                 if (snapshot.connectionState ==
                     ConnectionState.waiting) {
@@ -274,9 +272,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
 
-                // =================================================
+                
                 // ERROR
-                // =================================================
+              
 
                 if (snapshot.hasError) {
                   return Center(
@@ -321,9 +319,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
 
-                // =================================================
                 // NO DATA
-                // =================================================
+           
 
                 if (!snapshot.hasData ||
                     snapshot.data!.docs.isEmpty) {
@@ -353,9 +350,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
 
-                // =================================================
+                
                 // GET PRODUCTS
-                // =================================================
+               
 
                 final products =
                     snapshot.data!.docs
@@ -390,9 +387,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       category.contains(searchQuery);
                 }).toList();
 
-                // =================================================
+                
                 // NO SEARCH RESULTS
-                // =================================================
+                
 
                 if (products.isEmpty) {
                   return const Center(
@@ -430,9 +427,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
 
-                // =================================================
+                
                 // PRODUCT LIST
-                // =================================================
+                
 
                 return ListView.builder(
                   padding:
@@ -492,9 +489,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
                       child: Row(
                         children: [
-                          // ======================================
+                        
                           // IMAGE
-                          // ======================================
+                         
 
                           Container(
                             height: 80,
@@ -518,9 +515,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 12,
                           ),
 
-                          // ======================================
+                         
                           // PRODUCT INFORMATION
-                          // ======================================
+                          
 
                           Expanded(
                             child: Column(
@@ -580,9 +577,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 5,
                           ),
 
-                          // ======================================
+                         
                           // ADD / QUANTITY
-                          // ======================================
+                         
 
                           productButton(product),
                         ],

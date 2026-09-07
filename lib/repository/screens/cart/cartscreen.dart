@@ -85,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ================= HEADER =================
+            //  HEADER 
             Stack(
               children: [
                 Container(
@@ -151,7 +151,7 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
 
-            // ================= CART =================
+            // CART 
             Expanded(
               child: items.isEmpty
                   ? emptyCart()
@@ -197,7 +197,7 @@ class _CartScreenState extends State<CartScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
+                                      color: Colors.grey.withValues(alpha: 0.2),
                                       blurRadius: 5,
                                     ),
                                   ],
@@ -255,14 +255,14 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ),
 
-                        // ================= TOTAL =================
+                        // TOTAL
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withValues(alpha: 0.2),
                                 blurRadius: 8,
                               ),
                             ],

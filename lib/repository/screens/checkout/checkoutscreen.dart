@@ -15,7 +15,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Future<void> placeOrder() async {
     final cart = CartService.instance;
 
-    // ================= CHECK CART =================
+    //  CHECK CART 
 
     if (cart.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -26,14 +26,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return;
     }
 
-    // ================= START LOADING =================
+    //  START LOADING 
 
     setState(() {
       isLoading = true;
     });
 
     try {
-      // ================= CONVERT CART ITEMS =================
+      //  CONVERT CART ITEMS 
 
       final orderItems = cart.items.map<OrderItem>((item) {
         return OrderItem(
@@ -44,14 +44,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         );
       }).toList();
 
-      // ================= PLACE ORDER =================
+      //  PLACE ORDER 
 
       await OrderService.instance.placeOrder(
         items: orderItems,
         totalAmount: cart.totalPrice,
       );
 
-      // ================= CLEAR CART =================
+      //  CLEAR CART 
 
       cart.clearCart();
 
@@ -61,7 +61,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         isLoading = false;
       });
 
-      // ================= SUCCESS =================
+      // SUCCESS 
 
       showDialog(
         context: context,
@@ -97,7 +97,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         isLoading = false;
       });
 
-      // ================= ERROR =================
+      //  ERROR 
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -141,7 +141,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    // ================= ADDRESS =================
+                    //  ADDRESS
 
                     const Text(
                       "Delivery Address",
@@ -200,7 +200,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                     const SizedBox(height: 25),
 
-                    // ================= CART ITEMS =================
+                    //  CART ITEMS 
 
                     const Text(
                       "Order Items",
@@ -318,7 +318,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                     const SizedBox(height: 25),
 
-                    // ================= PAYMENT =================
+                    //  PAYMENT 
 
                     const Text(
                       "Payment Method",
@@ -365,7 +365,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                     const SizedBox(height: 25),
 
-                    // ================= ORDER SUMMARY =================
+                    //  ORDER SUMMARY
 
                     const Text(
                       "Order Summary",
@@ -471,7 +471,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ),
 
-            // ================= PLACE ORDER =================
+            //  PLACE ORDER 
 
             Container(
               padding: const EdgeInsets.all(16),

@@ -16,9 +16,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
 
-  // =========================================================
+  
   // DIWALI CATEGORIES
-  // =========================================================
+
 
   final List<Map<String, String>> data = [
     {
@@ -39,9 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  // =========================================================
+
   // BESTSELLER PRODUCTS
-  // =========================================================
+
 
   final List<Map<String, String>> category = [
     {
@@ -64,9 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  // =========================================================
+
   // GROCERY & KITCHEN
-  // =========================================================
+
 
   final List<Map<String, String>> groceryKitchen = [
     {
@@ -94,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, String>> filteredCategory = [];
   List<Map<String, String>> filteredGroceryKitchen = [];
 
-  // =========================================================
+
   // INIT STATE
-  // =========================================================
+
 
   @override
   void initState() {
@@ -108,9 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
     searchController.addListener(searchProducts);
   }
 
-  // =========================================================
+
   // SEARCH
-  // =========================================================
+
 
   void searchProducts() {
     final query = searchController.text.toLowerCase().trim();
@@ -131,9 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // =========================================================
+  
   // PRODUCT BUTTON
-  // =========================================================
+
 
   Widget productButton(Map<String, String> product) {
     final id = product["id"]!;
@@ -216,9 +216,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // =========================================================
+ 
   // CART BUTTON
-  // =========================================================
+
 
   Widget cartButton() {
     return AnimatedBuilder(
@@ -277,9 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // =========================================================
+  
   // PROFILE BUTTON
-  // =========================================================
+
 
   Widget profileButton() {
     return Material(
@@ -310,9 +310,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // =========================================================
+ 
   // OPEN BESTSELLERS
-  // =========================================================
+ 
 
   void openBestsellers() {
     Navigator.push(
@@ -325,9 +325,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // =========================================================
+ 
   // DISPOSE
-  // =========================================================
+
 
   @override
   void dispose() {
@@ -336,9 +336,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // =========================================================
+
   // BUILD
-  // =========================================================
+
 
   @override
   Widget build(BuildContext context) {
@@ -347,9 +347,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // =================================================
+              
               // HEADER
-              // =================================================
+              
 
               Stack(
                 children: [
@@ -407,9 +407,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  // =================================================
+                  
                   // CART BUTTON
-                  // =================================================
+                 
 
                   Positioned(
                     top: 25,
@@ -417,9 +417,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: cartButton(),
                   ),
 
-                  // =================================================
+                
                   // SEARCH
-                  // =================================================
+                 
 
                   Positioned(
                     left: 20,
@@ -442,9 +442,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  // =================================================
                   // PROFILE BUTTON - LAST IN STACK
-                  // =================================================
+                 
 
                   Positioned(
                     top: 17,
@@ -454,9 +453,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
 
-              // =================================================
+              
               // DIWALI SALE
-              // =================================================
+            
 
               Container(
                 height: 185,
@@ -537,9 +536,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 15),
 
-              // =================================================
+             
               // BESTSELLERS HEADING
-              // =================================================
+              
 
               GestureDetector(
                 onTap: openBestsellers,
@@ -567,9 +566,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 10),
 
-              // =================================================
+             
               // BESTSELLER PRODUCTS
-              // =================================================
+             
 
               SizedBox(
                 height: 250,
@@ -659,9 +658,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 15),
 
-              // =================================================
+       
               // GROCERY & KITCHEN
-              // =================================================
+            
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),

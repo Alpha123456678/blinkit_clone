@@ -11,9 +11,9 @@ class CategoryProductsScreen extends StatelessWidget {
     required this.category,
   });
 
-  // =========================================================
+
   // LOCAL BESTSELLER PRODUCTS
-  // =========================================================
+
 
   final List<Map<String, dynamic>> bestsellerProducts = const [
     {
@@ -39,9 +39,9 @@ class CategoryProductsScreen extends StatelessWidget {
     },
   ];
 
-  // =========================================================
+
   // PRODUCT IMAGE
-  // =========================================================
+
 
   Widget productImage(String image) {
     if (image.startsWith("http://") ||
@@ -72,9 +72,9 @@ class CategoryProductsScreen extends StatelessWidget {
     );
   }
 
-  // =========================================================
+
   // PRODUCT BUTTON
-  // =========================================================
+
 
   Widget productButton({
     required String id,
@@ -181,9 +181,9 @@ class CategoryProductsScreen extends StatelessWidget {
     );
   }
 
-  // =========================================================
+
   // FIRESTORE CATEGORY SCREEN
-  // =========================================================
+
 
   Widget firestoreProducts(BuildContext context) {
     final productService = ProductService();
@@ -270,9 +270,8 @@ class CategoryProductsScreen extends StatelessWidget {
     );
   }
 
-  // =========================================================
   // PRODUCT CARD
-  // =========================================================
+
 
   Widget productCard({
     required BuildContext context,
@@ -355,9 +354,9 @@ class CategoryProductsScreen extends StatelessWidget {
     );
   }
 
-  // =========================================================
+
   // BUILD
-  // =========================================================
+
 
   @override
   Widget build(BuildContext context) {
